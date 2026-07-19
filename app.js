@@ -64,6 +64,24 @@ app.post('/books', (req, res) => {
     res.status(201).json({ message: 'Book added successfully', book: newBook });
 });
 
+// update book
+app.put('/books/:code', (req, res) => {
+    const bookCode = parseInt(req.params.code);
+    const book = books.find(b => b.code === bookCode);
+
+    if (!book) {
+        return res.status(404).json({ error: 'Book not found' });
+    }
+
+    const { name, category, price } = req.body;
+
+    if (name !== undefined) book.name = name;
+    if (category !== undefined) book.category = category;
+    if (price !== undefined) book.price = parseFloat(price);
+
+    res.json({ message: 'Book updated successfully', book });
+});
+
 app.listen(5000, () => {
     console.log(`Server is running on http://localhost:5000`);
 });
