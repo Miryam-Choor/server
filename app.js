@@ -25,6 +25,17 @@ app.get('/books', (req, res) => {
     }
 });
 
+app.get('/books/:code', (req, res) => {
+    const bookCode = parseInt(req.params.code);
+    const book = books.find(b => b.code === bookCode);
+
+    if (!book) {
+        return res.status(404).json({ error: 'Book not found' });
+    }
+
+    res.json(book);
+});
+
 app.listen(5000, () => {
     console.log(`Server is running on http://localhost:5000`);
 });
