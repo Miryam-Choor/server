@@ -82,6 +82,35 @@ app.put('/books/:code', (req, res) => {
     res.json({ message: 'Book updated successfully', book });
 });
 
+// borrow
+app.post('/books/:code/borrow', (req, res) => {
+    const bookCode = parseInt(req.params.code);
+    const { userCode } = req.body;
+
+    if (!userCode) {
+        return res.status(400).json({ error: 'User code is required for borrowing' });
+    }
+
+    const book = books.find(b => b.code === bookCode);
+    if (!book) {
+        return res.status(404).json({ error: 'Book not found' });
+    }
+
+    if (book.isBorrowed) {
+        return res.status(400).json({ error: 'Book is already borrowed' });
+    }
+
+    book.isBorrowed = true;
+    const borrowDate = new Date().toISOString().split('T')[0]; 
+    
+    book.borrowHistory.push({
+        borrowDate,
+        userCode: parseInt(userCode)
+    });
+
+    res.json({ message: 'Book borrowed successfully', book });
+});
+
 app.listen(5000, () => {
     console.log(`Server is running on http://localhost:5000`);
 });
