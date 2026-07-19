@@ -111,6 +111,24 @@ app.post('/books/:code/borrow', (req, res) => {
     res.json({ message: 'Book borrowed successfully', book });
 });
 
+// return
+app.post('/books/:code/return', (req, res) => {
+    const bookCode = parseInt(req.params.code);
+    const book = books.find(b => b.code === bookCode);
+
+    if (!book) {
+        return res.status(404).json({ error: 'Book not found' });
+    }
+
+    if (!book.isBorrowed) {
+        return res.status(400).json({ error: 'Book is not currently borrowed' });
+    }
+
+    book.isBorrowed = false;
+
+    res.json({ message: 'Book returned successfully', book });
+});
+
 app.listen(5000, () => {
     console.log(`Server is running on http://localhost:5000`);
 });
