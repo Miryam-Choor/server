@@ -13,6 +13,8 @@ app.all('/', (req, res) => {
 app.get('/books', (req, res) => {
     let resultBooks = [...books];
 
+const { search, category, page = 1, limit = 5 } = req.query;
+
     if (search) {
         resultBooks = resultBooks.filter(b => 
             b.name.toLowerCase().includes(search.toLowerCase())
@@ -24,6 +26,20 @@ app.get('/books', (req, res) => {
             b.category.toLowerCase().includes(category.toLowerCase())
         );
     }
+
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const startIndex = (pageNum - 1) * limitNum;
+    const endIndex = startIndex + limitNum;
+
+    const paginatedBooks = resultBooks.slice(startIndex, endIndex);
+
+    res.json({
+        totalResults: resultBooks.length,
+        currentPage: pageNum,
+        totalPages: Math.ceil(resultBooks.length / limitNum),
+        data: paginatedBooks
+    });
 });
 
 // get book by id
