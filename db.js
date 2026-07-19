@@ -1,5 +1,5 @@
 // db.js
-const books = [
+export const books = [
   {
     code: 1,
     name: "Black Borders", // גבולות שחורים
@@ -27,5 +27,3 @@ const books = [
     borrowHistory: []
   }
 ];
-
-module.exports = { books };

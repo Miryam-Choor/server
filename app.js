@@ -1,7 +1,6 @@
-const express = require('express');
+import express from 'express';
+import { books } from './db.js';
 const app = express();
-const PORT = 5000;
-const { books } = require('./db');
 
 app.use(express.json());
 
