@@ -1,7 +1,7 @@
 // db.js
 export const books = [
   {
-    code: 1,
+    id: 1,
     name: "Black Borders", // גבולות שחורים
     category: "Youth",
     price: 120,
@@ -9,7 +9,7 @@ export const books = [
     borrowHistory: []
   },
   {
-    code: 2,
+    id: 2,
     name: "Children of the Island", // ילדי האי
     category: "Adventure",
     price: 100,
@@ -19,7 +19,7 @@ export const books = [
     ]
   },
   {
-    code: 3,
+    id: 3,
     name: "Stalks of grain left in the field", // שיבולים שנותרו בשדה
     category: "Emotion",
     price: 150,
