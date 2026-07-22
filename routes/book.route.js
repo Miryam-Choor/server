@@ -12,7 +12,7 @@ import {
 const router = Router();
 
 router.get('/', getAllBooks);
-router.get('/:code', getBookByCode);
+router.get('/:code', getBookById);
 router.post('/', addBook);
 router.put('/:code', updateBook);
 router.post('/:code/borrow', borrowBook);
