@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import mainRouter from './routes/index.route.js';
+import { addCurrentDate, logGetDate } from './middlewares/custom.middleware.js';
 
 const app = express();
 
@@ -18,8 +19,8 @@ app.use(helmet());
 
 // הגבלת מספר הבקשות מכתובת IP מסוימת למניעת מתקפות Brute Force או העמסת יתר
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 דקות
-    max: 100 // הגבלה ל-100 בקשות לכל IP
+    windowMs: 15 * 60 * 1000,
+    max: 100
 });
 app.use(limiter);
 
@@ -27,6 +28,10 @@ app.use(limiter);
 if (process.env.NODE_ENV !== 'production') {
     app.use(morgan('dev'));
 }
+
+app.use(addCurrentDate);
+
+app.use(logGetDate);
 
 app.use('/api', mainRouter);
 
