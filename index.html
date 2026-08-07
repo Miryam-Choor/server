@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check server</title>
+</head>
+<body>
+    <h1>בדיקת חיבור לשרת הספרייה</h1>
+    <button onclick="fetchBooks()">טען ספרים</button>
+    <pre id="output"></pre>
+
+    <script>
+        async function fetchBooks() {
+            try {
+                const response = await fetch('http://localhost:5000/api/book');
+                const data = await response.json();
+                document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('שגיאה בחיבור לשרת:', error);
+            }
+        }
+    </script>
+</body>
+</html>
