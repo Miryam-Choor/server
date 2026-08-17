@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import mainRouter from './routes/index.route.js';
 import { addCurrentDate, logGetDate } from './middlewares/custom.middleware.js';
+import { notFound, errorHandler } from './middlewares/error.middleware.js';
 
 const app = express();
 
@@ -38,6 +39,10 @@ app.use('/api', mainRouter);
 app.all('/', (req, res) => {
     res.send('Welcome to the library!');
 });
+
+app.use(notFound);
+
+app.use(errorHandler);
 
 app.listen(5000, () => {
     console.log(`Server is running on http://localhost:5000`);
