@@ -1,4 +1,4 @@
-// controllers/book.controller.js
+// controllers/user.controller.js
 import { users } from '../users.db.js';
 
 // all users
@@ -11,14 +11,15 @@ export const signUp = (req, res) => {
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
-        return res.status(400).json({ error: 'Please provide username, email, and password' });
+        res.status(400);
+        return next(new Error('Please provide username, email, and password'));
     }
 
     const existingUser = users.find(u => 
         u.email.toLowerCase() === email.toLowerCase());
     if (existingUser) {
-        return res.status(400).json({ error: 'User with this email already exists' });
-    }
+        res.status(400);
+        return next(new Error('User with this email already exists'));    }
 
     const newUser = {
         id: Date.now(),
@@ -37,13 +38,15 @@ export const signIn = (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return res.status(400).json({ error: 'Please provide email and password' });
+        res.status(400);
+        return next(new Error('Please provide email and password'));
     }
 
     const user = users.find(u => 
         u.email.toLowerCase() === email.toLowerCase() && u.password === password);
     if (!user) {
-        return res.status(401).json({ error: 'Invalid email or password' });
+        res.status(401);
+        return next(new Error('Invalid email or password'));
     }
 
     res.json({ message: 'Sign in successful', user });

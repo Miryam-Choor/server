@@ -39,9 +39,10 @@ export const getBookById = (req, res, next) => {
 
     if (!book) {
         res.status(404);
+        return next(new Error('Book not found'));
     }
 
-    return next(new Error('Book not found'));
+    res.json(book);
 };
 
 export const addBook = (req, res, next) => { 
@@ -58,12 +59,14 @@ export const addBook = (req, res, next) => {
         return next(new Error('A book with this code already exists'));
     }
 
+    const imagePath = req.file ? `/public/images/${req.file.filename}` : null;
+
     const newBook = {
-        code: parseInt(code),
         id: parseInt(code),
         name,
         category,
         price: parseFloat(price),
+        image: imagePath,
         isBorrowed: false,
         borrowHistory: []
     };
