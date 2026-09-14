@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         // שם הקובץ: קוד הספר + חותמת זמן + הסיומת המקורית
-        const bookCode = req.params.code || req.body.code || 'default';
+        const bookCode = req.params.id || req.body.id || 'default';
         const uniqueSuffix = Date.now();
         cb(null, `${bookCode}-${uniqueSuffix}${path.extname(file.originalname)}`);
     }

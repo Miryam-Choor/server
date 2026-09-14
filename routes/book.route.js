@@ -9,15 +9,18 @@ import {
     returnBook, 
     deleteBook 
 } from '../controllers/book.controller.js';
+import { validate } from '../middlewares/validate.middleware.js';
+import { bookSchema } from '../validators/validation.schemas.js';
+import { upload } from '../utils/upload.js';
 
 const router = Router();
 
 router.get('/', getAllBooks);
-router.get('/:code', getBookById);
-router.post('/', addBook);
-router.put('/:code', updateBook);
-router.post('/:code/borrow', borrowBook);
-router.post('/:code/return', returnBook);
-router.delete('/:code', deleteBook);
+router.get('/:id', getBookById);
+router.post('/', upload.single('image'), validate(bookSchema), addBook);
+router.put('/:id', validate(bookSchema), updateBook);
+router.post('/:id/borrow', borrowBook);
+router.post('/:id/return', returnBook);
+router.delete('/:id', deleteBook);
 
 export default router;
