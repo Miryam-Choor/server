@@ -15,7 +15,7 @@ export const books = [
     price: 100,
     isBorrowed: true,
     borrowHistory: [
-      { borrowDate: "2026-07-01", userCode: 101 }
+      { borrowDate: "2026-07-01", userId: 101 }
     ]
   },
   {

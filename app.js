@@ -11,6 +11,8 @@ import { notFound, errorHandler } from './middlewares/error.middleware.js';
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 // מאפשר גישה מכל פרויקט client ומטפל בבעיות CORS
 app.use(cors());

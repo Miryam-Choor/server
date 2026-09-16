@@ -4,7 +4,7 @@ import Joi from 'joi';
 
 // 1. update schema
 export const bookSchema = Joi.object({
-    code: Joi.number().integer().positive().required(),
+    id: Joi.number().integer().positive().required(),
     name: Joi.string().min(2).max(100).required(),
     category: Joi.string().min(2).required(),
     price: Joi.number().positive().precision(2).required()

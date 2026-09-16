@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check server</title>
+    <style>
+        body { font-family: Arial, sans-serif; direction: rtl; padding: 20px; }
+        form { display: flex; flexDirection: column; width: 300px; gap: 10px; }
+        label { display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+
+    <h1>בדיקת חיבור לשרת הספרייה</h1>
+    <button onclick="fetchBooks()">טען ספרים</button>
+    <pre id="output"></pre>
+
+    <h2>הוספת ספר חדש עם תמונה (דפדפן)</h2>
+    <form id="bookForm">
+        <label>קוד ספר: <input type="number" id="id" required></label>
+        <label>שם ספר: <input type="text" id="name" required></label>
+        <label>קטגוריה: <input type="text" id="category" required></label>
+        <label>מחיר: <input type="number" id="price" step="0.01" required></label>
+        <label>תמונה: <input type="file" id="image" accept="image/*" required></label>
+        <button type="submit">שלח לשרת</button>
+    </form>
+
+    <p id="result" style="font-weight: bold; margin-top: 15px;"></p>
+
+    <script>
+        async function fetchBooks() {
+            try {
+                const response = await fetch('http://localhost:5000/api/book');
+                const data = await response.json();
+                document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('שגיאה בחיבור לשרת:', error);
+            }
+        }
+
+        document.getElementById('bookForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // יצירת אובייקט FormData המרכז טקסט וקבצים יחד
+            const formData = new FormData();
+            formData.append('id', document.getElementById('id').value);
+            formData.append('name', document.getElementById('name').value);
+            formData.append('category', document.getElementById('category').value);
+            formData.append('price', document.getElementById('price').value);
+            formData.append('image', document.getElementById('image').files[0]);
+
+            try {
+                const response = await fetch('http://localhost:5000/api/book', {
+                    method: 'POST',
+                    body: formData // שליחת ה-FormData ישירות ללא הגדרת Content-Type ידנית
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('result').style.color = 'green';
+                    document.getElementById('result').innerText = 'הספר והתמונה הועלו בהצלחה!';
+                    console.log(data);
+                } else {
+                    document.getElementById('result').style.color = 'red';
+                    document.getElementById('result').innerText = 'שגיאה: ' + (data.message || JSON.stringify(data));
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('result').style.color = 'red';
+                document.getElementById('result').innerText = 'שגיאת תקשורת מול השרת';
+            }
+        });
+    </script>
+</body>
+</html>

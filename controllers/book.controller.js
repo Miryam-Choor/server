@@ -34,8 +34,8 @@ export const getAllBooks = (req, res) => {
 };
 
 export const getBookById = (req, res, next) => {
-    const bookCode = parseInt(req.params.code);
-    const book = books.find(b => (b.code || b.id) === bookCode);
+    const bookId = parseInt(req.params.id);
+    const book = books.find(b => (b.id || b.id) === bookId);
 
     if (!book) {
         res.status(404);
@@ -46,23 +46,23 @@ export const getBookById = (req, res, next) => {
 };
 
 export const addBook = (req, res, next) => { 
-    const { code, name, category, price } = req.body;
+    const { id, name, category, price } = req.body;
 
-    if (!code || !name || !category || price === undefined) {
+    if (!id || !name || !category || price === undefined) {
         res.status(400);
-        return next(new Error('Please provide code, name, category, and price')); 
+        return next(new Error('Please provide id, name, category, and price')); 
     }
 
-    const existingBook = books.find(b => (b.code || b.id) === parseInt(code));
+    const existingBook = books.find(b => (b.id || b.id) === parseInt(id));
     if (existingBook) {
         res.status(400);
-        return next(new Error('A book with this code already exists'));
+        return next(new Error('A book with this id already exists'));
     }
 
     const imagePath = req.file ? `/public/images/${req.file.filename}` : null;
 
     const newBook = {
-        id: parseInt(code),
+        id: parseInt(id),
         name,
         category,
         price: parseFloat(price),
@@ -76,8 +76,8 @@ export const addBook = (req, res, next) => {
 };
 
 export const updateBook = (req, res, next) => {
-    const bookCode = parseInt(req.params.code);
-    const bookIndex = books.findIndex(b => (b.code || b.id) === bookCode);
+    const bookId = parseInt(req.params.id);
+    const bookIndex = books.findIndex(b => (b.id) === bookId);
 
     if (bookIndex === -1) {
         res.status(404);
@@ -99,21 +99,21 @@ export const updateBook = (req, res, next) => {
 };
 
 export const borrowBook = (req, res, next) => { 
-    const bookCode = parseInt(req.params.code);
-    const { userCode } = req.body;
+    const bookId = parseInt(req.params.id);
+    const { userId } = req.body;
 
-    if (!userCode) {
+    if (!userId) {
         res.status(400);
-        return next(new Error('User code is required for borrowing'));
+        return next(new Error('User ID is required for borrowing'));
     }
 
-    const user = users.find(u => u.id === parseInt(userCode));
+    const user = users.find(u => u.id === parseInt(userId));
     if (!user) {
         res.status(404);
         return next(new Error('User not found'));
     }
 
-    const book = books.find(b => (b.code || b.id) === bookCode);
+    const book = books.find(b => (b.id) === bookId);
     if (!book) {
         res.status(404);
         return next(new Error('Book not found'));
@@ -128,19 +128,19 @@ export const borrowBook = (req, res, next) => {
     const borrowDate = new Date().toISOString().split('T')[0];
     book.borrowHistory.push({
         borrowDate,
-        userCode: parseInt(userCode)
+        userId: parseInt(userId)
     });
 
-    user.borrowedBooks.push(bookCode);
+    user.borrowedBooks.push(bookId);
 
     res.json({ message: 'Book borrowed successfully', book, user });
 };
 
 export const returnBook = (req, res, next) => { 
-    const bookCode = parseInt(req.params.code);
-    const { userCode } = req.body;
+    const bookId = parseInt(req.params.id);
+    const { userId } = req.body;
 
-    const book = books.find(b => (b.code || b.id) === bookCode);
+    const book = books.find(b => (b.id) === bookId);
     if (!book) {
         res.status(404);
         return next(new Error('Book not found'));
@@ -153,10 +153,10 @@ export const returnBook = (req, res, next) => {
 
     book.isBorrowed = false;
 
-    if (userCode) {
-        const user = users.find(u => u.id === parseInt(userCode));
+    if (userId) {
+        const user = users.find(u => u.id === parseInt(userId));
         if (user) {
-            user.borrowedBooks = user.borrowedBooks.filter(id => id !== bookCode);
+            user.borrowedBooks = user.borrowedBooks.filter(id => id !== bookId);
         }
     }
 
@@ -164,8 +164,8 @@ export const returnBook = (req, res, next) => {
 };
 
 export const deleteBook = (req, res, next) => { 
-    const bookCode = parseInt(req.params.code);
-    const bookIndex = books.findIndex(b => (b.code || b.id) === bookCode);
+    const bookId = parseInt(req.params.id);
+    const bookIndex = books.findIndex(b => (b.id) === bookId);
 
     if (bookIndex === -1) {
         res.status(404); 
